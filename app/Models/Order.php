@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        // 'user_id', // Add other fields that can be mass assigned here
+        // 'user_id', 
         // 'book_id',
         'title',
         'name',

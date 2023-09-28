@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\ReviewController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\API\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,20 +24,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Register user middleware
 Route::Post('/register', [UserController::class,'register']);
-Route::Post('/login', [UserController::class,'login']); 
-Route::resource('books', BookController::class);
-Route::resource('reviews', ReviewController::class);
+Route::Post('/login', [UserController::class,'login']);
 Route::resource('orders', OrderController::class);
+
+
 // Route::get('/books/{id}/rating', [ReviewController::class,'averageRatingForBook']); 
+Route::resource('books', BookController::class);
+Route::resource('wishlist', WishlistController::class);
 
-// Cart Routes
-Route::Post('/cart/add', [CartController::class,'add']); 
-Route::get('/cart', [CartController::class,'getAll']); 
-Route::Put('/cart/{id}', [CartController::class,'update']); 
-Route::delete('/cart/{id}', [CartController::class,'delete']); 
-
+// Review 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('reviews', ReviewController::class);   
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::Post('/logout', [UserController::class,'logout']);
+    Route::Post('/cart/add', [CartController::class,'add']); 
+    Route::get('/cart', [CartController::class,'getAll']); 
+    Route::Put('/cart/{id}', [CartController::class,'update']); 
+    Route::delete('/cart/{id}', [CartController::class,'delete']); 
 });

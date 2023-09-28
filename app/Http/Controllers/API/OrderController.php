@@ -30,7 +30,7 @@ class OrderController extends Controller
         }
         return response()->json(['data' => $order], 200);
     }
-
+    
 
     // Generate the order
     public function store(Request $request)
