@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Wishlist;
+use App\Models\Book;
+use Auth;
 
 class WishlistController extends Controller
 {
@@ -11,80 +16,48 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        //
+        $wishlist = Wishlist::where('user_id', Auth::id())->get();
+        return response()->json($wishlist);
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Add wish list 
+    public function addWishList(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'book_id' => 'required|exists:books,id',
-        ]);
-    
-        $book_id = $request->input('book_id');
-        $user = auth()->user();
-        if ($user->wishlistItems()->where('book_id', $book_id)->exists()) {
-          
-            $response = [
-                'message' => 'Book is already in the wishlist',
-                'book_id' => $book_id,
-            ];
-            return response()->json($response, 400); // Return a 400 Bad Request response
+       if(Auth::check())
+       {
+        $book_id = $request->input( 'book_id' );
+        if (Book::find($book_id)) 
+        {
+            $wish = new Wishlist();
+            $wish->book_id=$book_id;
+            $wish->user_id = Auth::id();
+            $wish->save();
+            return response()->json(['status' => 'Book added to wish list']);
+        } else {
+            return response()->json(['status' => 'Book does not exist']);
         }
-    
-        // Attach the book to the user's wishlist
-        $user->wishlistItems()->attach($book_id);
-    
-        // Create a response array
-        $response = [
-            'message' => 'Item added to wishlist successfully',
-            'book_id' => $book_id,
-        ];
-    
-        // Return a JSON response
-        return response()->json($response, 201); // Return a 201 Created response
-    }
-    
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        
+       }else {
+        return response()->json(['status' => 'Login to continue']);
+       }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Delete wish list
+    public function deleteWishList(Request $request)
     {
-        //
+        if (Auth::check()) {
+            $book_id = $request->input('book_id');  
+            if (Wishlist::where('book_id', $book_id)->where('user_id', Auth::id())->exists()) {
+                $wish = Wishlist::where('book_id', $book_id)->where('user_id', Auth::id())->delete();
+                // $wish->delete();
+                return response()->json(['status' => 'Wish List item deleted']);
+            } else {
+                return response()->json(['status' => 'Wish List item not found']);
+            }
+        } else {
+            return response()->json(['status' => 'Login to continue']);
+        }
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 }

@@ -21,15 +21,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+       
+
+    ];
+
+    protected $hidden = [
         'address',
         'country',
         'city',
         'street',
         'phone_number',
-
-    ];
-
-    protected $hidden = [
         'password',
         'remember_token',
         'updated_at', 
@@ -40,7 +41,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
+    public $guard_name = 'api';
 
     public function books()
     {
@@ -56,4 +57,10 @@ class User extends Authenticatable
 {
     return $this->hasMany(Cart::class);
 }
+
+public function newsletters()
+{
+    return $this->hasMany(Newsletter::class);
+}
+
 }

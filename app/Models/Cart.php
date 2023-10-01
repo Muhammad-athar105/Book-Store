@@ -11,5 +11,9 @@ class Cart extends Model
 
 
     // protected $fillable = ['title', 'quantity', 'price', 'image', 'user_id', 'book_id', 'total_price'];
+   
 
+    public function books(){
+        return $this->belongsTo(Book::class, 'book_id', 'id');
+    }
 }

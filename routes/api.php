@@ -8,41 +8,84 @@ use App\Http\Controllers\API\ReviewController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\WishlistController;
+use App\Http\Controllers\API\NewsletterController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+
+Route::middleware(['auth','isAdmin'])->group(function (){
+    
+    Route::post('/books/create', [BookController::class, 'store']);
+    Route::patch('/books/{id}', [BookController::class, 'update']);
+    Route::delete('/books/{id}', [BookController::class, 'destroy']);
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::post('/orders/create', [OrderController::class, 'store']);
+    Route::put('/orders/{id}', [OrderController::class, 'update']);
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+    
 });
 
-// Register user middleware
-Route::Post('/register', [UserController::class,'register']);
-Route::Post('/login', [UserController::class,'login']);
-Route::resource('orders', OrderController::class);
+// Public Routes
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
+Route::get('books', [BookController::class, 'index']);
+Route::get('books/{id}', [BookController::class, 'show']);
+Route::post('/subscribe', [NewsletterController::class, 'subscribe']);
+Route::post('/unsubscribe', [NewsletterController::class, 'unsubscribe']);
 
-
-// Route::get('/books/{id}/rating', [ReviewController::class,'averageRatingForBook']); 
-Route::resource('books', BookController::class);
-Route::resource('wishlist', WishlistController::class);
-
-// Review 
+//wishlist
+// User Routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('reviews', ReviewController::class);   
+    Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::post('/cart/add', [CartController::class, 'add']);
+    Route::get('/cart', [CartController::class, 'getAll']);
+    Route::put('/cart/{id}', [CartController::class, 'update']);
+    Route::delete('/cart/{id}', [CartController::class, 'delete']);
+    Route::resource('reviews', ReviewController::class);
+    Route::get('wishlist', [WishlistController::class, 'index']);
+    Route::post('add-wishlist', [WishlistController::class, 'addWishList']);
+    Route::delete('/delete-wishlist', [WishlistController::class, 'deleteWishList']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::Post('/logout', [UserController::class,'logout']);
-    Route::Post('/cart/add', [CartController::class,'add']); 
-    Route::get('/cart', [CartController::class,'getAll']); 
-    Route::Put('/cart/{id}', [CartController::class,'update']); 
-    Route::delete('/cart/{id}', [CartController::class,'delete']); 
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

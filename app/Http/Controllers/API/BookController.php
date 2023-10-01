@@ -72,13 +72,13 @@ class BookController extends Controller
             return response()->json(['message' => 'Book not found'], 404);
         }
     
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'author' => 'required',
-            'description' => 'required',
-            'price' => 'required',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+            $validator = Validator::make($request->all(), [
+                'title' => 'required',
+                'author' => 'required',
+                'description' => 'required',
+                'price' => 'required',
+                'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
     
         if ($validator->fails()) {
             return response()->json(['message' => 'Validation Failed', 'errors' => $validator->errors()], 422);
