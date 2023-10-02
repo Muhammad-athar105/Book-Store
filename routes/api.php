@@ -22,8 +22,6 @@ Route::middleware(['auth','isAdmin'])->group(function (){
     Route::delete('/books/{id}', [BookController::class, 'destroy']);
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
-    Route::post('/orders/create', [OrderController::class, 'store']);
-    Route::put('/orders/{id}', [OrderController::class, 'update']);
     Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
     
 });
@@ -38,9 +36,11 @@ Route::post('/unsubscribe', [NewsletterController::class, 'unsubscribe']);
 
 // User Routes
 Route::middleware('auth:sanctum')->group(function () {
-
+    
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::put('/orders/{id}', [OrderController::class, 'update']);
+    Route::post('/orders/create', [OrderController::class, 'store']);
     Route::post('/cart/add', [CartController::class, 'add']);
     Route::get('/cart', [CartController::class, 'getAll']);
     Route::delete('/cart/{id}', [CartController::class, 'delete']);
