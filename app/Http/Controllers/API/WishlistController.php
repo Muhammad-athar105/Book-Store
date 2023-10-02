@@ -10,10 +10,8 @@ use App\Models\Book;
 use Auth;
 
 class WishlistController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
+{   
+    // Get All wishlist
     public function index()
     {
         $wishlist = Wishlist::where('user_id', Auth::id())->get();
@@ -36,8 +34,7 @@ class WishlistController extends Controller
             return response()->json(['status' => 'Book added to wish list']);
         } else {
             return response()->json(['status' => 'Book does not exist']);
-        }
-        
+        } 
        }else {
         return response()->json(['status' => 'Login to continue']);
        }

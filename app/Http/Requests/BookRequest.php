@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Helpers\Helper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class BookRequest extends FormRequest
 {
@@ -22,7 +24,12 @@ class BookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required',
+               'author' => 'required',
+               'description' => 'required',
+               'price' => 'required',
+               'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
+        Helpers::sendError('validation error', $validator->errors() ); 
     }
 }

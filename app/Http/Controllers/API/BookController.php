@@ -20,16 +20,8 @@ class BookController extends Controller
    }
 
        // create a new product
-       public function store(Request $request)
+       public function store(BookRequest $request)
        {
-           $input = $request->all();
-           $validator = Validator::make($input, [
-               'title' => 'required',
-               'author' => 'required',
-               'description' => 'required',
-               'price' => 'required',
-               'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-           ]);
            $image_path = $request->file('image')->store('image', 'public');
 
            if($validator->fails()){

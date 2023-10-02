@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator; 
+use App\Http\Requests\OrderRequest;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Book;
@@ -16,10 +17,8 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::all();
-    
         return response()->json(['data' => $orders], 200);
     }
-
 
     // Get the order by id
     public function show(string $id)
@@ -30,28 +29,10 @@ class OrderController extends Controller
         }
         return response()->json(['data' => $order], 200);
     }
-    
 
     // Generate the order
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'title' => 'required|string',
-            'address' => 'string|nullable',
-            'phone_number' => 'required|integer',
-            'quantity' => 'required|integer',
-            'each_price' => 'required|numeric',
-            'total_price' => 'required|numeric',
-            'order_date' => 'required|date',
-            'delivery_date' => 'required|date',
-            'order_status' => 'nullable|string|in:delivered,pending', 
-        ]);
-        
-        if ($validator->fails()) {
-            return response()->json(['error' => 'Validation failed', 'errors' => $validator->errors()], 400);
-        }
-        
         $user = User::where('name', $request->name)->first();
         $book = Book::where('title', $request->title)->first();
         
@@ -72,24 +53,8 @@ class OrderController extends Controller
     }
     
 /// Update order
-public function update(Request $request, string $id)
+public function update(OrderRequest $request, string $id)
 {
-    $validator = Validator::make($request->all(), [
-        'name' => 'string',
-        'title' => 'string',
-        'address' => 'string|nullable',
-        'phone_number' => 'integer',
-        'quantity' => 'integer',
-        'each_price' => 'numeric',
-        'total_price' => 'numeric',
-        'order_date' => 'date',
-        'delivery_date' => 'date',
-        'order_status' => 'string|in:delivered,pending',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json(['error' => 'Validation failed', 'errors' => $validator->errors()], 400);
-    }
 
     $order = Order::find($id);
     if (!$order) {
